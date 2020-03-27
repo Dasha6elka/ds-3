@@ -9,7 +9,6 @@ namespace JobLogger
     class Program
     {
         private static readonly AutoResetEvent _closing = new AutoResetEvent(false);
-        // private static bool running = true;
         static void Main(string[] args)
         {
             var subscriberService = new SubscriberService();
@@ -19,16 +18,6 @@ namespace JobLogger
             {
                 subscriberService.Run(connection, redis);
                 Console.WriteLine("Events listening started.");
-
-                // Console.CancelKeyPress += delegate (object sender, ConsoleCancelEventArgs e)
-                // {
-                //     e.Cancel = true;
-                //     Program.running = false;
-                // };
-
-                // while (running) { }
-
-                // Console.WriteLine("JobLogger service is shut down");
 
                 Task.Factory.StartNew(() =>
                 {
