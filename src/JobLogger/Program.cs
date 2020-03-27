@@ -8,8 +8,8 @@ namespace JobLogger
 {
     class Program
     {
-        // private static readonly AutoResetEvent _closing = new AutoResetEvent(false);
-        private static bool running = true;
+        private static readonly AutoResetEvent _closing = new AutoResetEvent(false);
+        // private static bool running = true;
         static void Main(string[] args)
         {
             var subscriberService = new SubscriberService();
@@ -20,32 +20,32 @@ namespace JobLogger
                 subscriberService.Run(connection, redis);
                 Console.WriteLine("Events listening started.");
 
-                Console.CancelKeyPress += delegate (object sender, ConsoleCancelEventArgs e)
-                {
-                    e.Cancel = true;
-                    Program.running = false;
-                };
-
-                while (running) { }
-
-                Console.WriteLine("JobLogger service is shut down");
-
-                // Task.Factory.StartNew(() =>
+                // Console.CancelKeyPress += delegate (object sender, ConsoleCancelEventArgs e)
                 // {
-                //     while (true)
-                //     {
-                //         Console.WriteLine(DateTime.Now.ToString());
-                //         Thread.Sleep(1000);
-                //     }
-                // });
-                // Console.CancelKeyPress += new ConsoleCancelEventHandler(OnExit);
-                // _closing.WaitOne();
+                //     e.Cancel = true;
+                //     Program.running = false;
+                // };
+
+                // while (running) { }
+
+                // Console.WriteLine("JobLogger service is shut down");
+
+                Task.Factory.StartNew(() =>
+                {
+                    while (true)
+                    {
+                        Console.WriteLine(DateTime.Now.ToString());
+                        Thread.Sleep(1000);
+                    }
+                });
+                Console.CancelKeyPress += new ConsoleCancelEventHandler(OnExit);
+                _closing.WaitOne();
             }
         }
-        // protected static void OnExit(object sender, ConsoleCancelEventArgs args)
-        // {
-        //     Console.WriteLine("Exit");
-        //     _closing.Set();
-        // }
+        protected static void OnExit(object sender, ConsoleCancelEventArgs args)
+        {
+            Console.WriteLine("Exit");
+            _closing.Set();
+        }
     }
 }
